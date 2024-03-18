@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z1-3</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+
+        <script>
+            window.onload = () => {
+                svg = d3.select("body")
+                        .append("svg")
+                        .attr("width", "1000")
+                        .attr("height", "500");
+
+                svg.append("circle")
+                    .attr("cx", "100")
+                    .attr("cy", "100")
+                    .attr("r", "80")
+                    .attr("style", "stroke: blue; stroke-width:10px; fill:transparent;");
+
+                svg.append("circle")
+                    .attr("cx", "290")
+                    .attr("cy", "100")
+                    .attr("r", "80")
+                    .attr("style", "stroke: black; stroke-width:10px; fill:transparent;");
+
+                svg.append("circle")
+                    .attr("cx", "480")
+                    .attr("cy", "100")
+                    .attr("r", "80")
+                    .attr("style", "stroke: pink; stroke-width:10px; fill:transparent;");
+
+                svg.append("circle")
+                    .attr("cx", "195")
+                    .attr("cy", "190")
+                    .attr("r", "80")
+                    .attr("style", "stroke: yellow; stroke-width:10px; fill:transparent;");
+
+                svg.append("circle")
+                    .attr("cx", "385")
+                    .attr("cy", "190")
+                    .attr("r", "80")
+                    .attr("style", "stroke: green; stroke-width:10px; fill:transparent;"); 
+            }
+        </script>
+    </body>
+</html>

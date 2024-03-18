@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z1-3</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <script>
+            window.onload = () => {
+                body = d3.select("body");
+                body.append("h1").html("Naslov dokumenta");
+
+                ids = ["1","2","3","4","5","6","7","8","9","10"];
+
+                body.selectAll("div")
+                    .data(ids)
+                    .enter()
+                    .append("div")
+                        .attr("id", function(id){return "id"+id;})
+                        .each(function(id){
+                            d3.select(this).append("h2")
+                                .html("Podnaslov "+id);
+                            d3.select(this).append("p")
+                                .html("Tekst " + id + ".");
+                        });
+            }
+        </script>
+    </body>
+</html>

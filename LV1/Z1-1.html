@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z1-1</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <script>
+            window.onload = () => {
+                body = d3.select("body");
+
+                body.append("h1").html("Naslov dokumenta");
+
+                firstDiv = body.insert("div");
+                firstDiv_h2 = firstDiv.insert("h2").html("Podnaslov 1");
+                firstDiv_p = firstDiv.append("p").html("Teskt 1.");
+
+                secondDiv = body.append("div");
+                secondDiv_h2 = secondDiv.insert("h2").html("Podnaslov 2");
+                secondDiv_p = secondDiv.append("p").html("Teskt 2.");
+            }    
+        </script>
+    </body>
+</html>

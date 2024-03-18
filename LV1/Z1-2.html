@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z1-2</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+
+        <script>
+            window.onload = () => {
+                body = d3.select("body");
+
+                body.append("h1").html("Naslov dokumenta");
+
+                firstDiv = body.insert("div").attr("id", "id1");
+                firstDiv_h2 = firstDiv.insert("h2").html("Podnaslov 1");
+                firstDiv_p = firstDiv.append("p").html("Teskt 1.");
+
+                secondDiv = body.append("div").attr("id", "id2");
+                secondDiv_h2 = secondDiv.insert("h2").html("Podnaslov 2");
+                secondDiv_p = secondDiv.append("p").html("Teskt 2.");
+            }
+            
+            const readValuesOfParagraphs = () =>{
+                firstDiv = document.getElementById("id1");
+                secondDiv = document.getElementById("id2");
+
+                firstDiv_p = firstDiv.getElementsByTagName('p')[0];
+                secondDiv_p = document.querySelector("#id2 p");
+
+                console.log("firstDiv_p: ", firstDiv_p.innerHTML);
+                console.log("secondDiv_p: ", secondDiv_p.innerHTML);
+
+                firstDiv_p.innerHTML = "Novi tekst 1.";
+                secondDiv_p.innerHTML = "Novi tekst 2.";
+            }
+        </script>
+
+        <button type="button" onclick="readValuesOfParagraphs()">Read</button>
+    </body>
+</html>

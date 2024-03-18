@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z1-4</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+
+        <script>
+            window.onload = () => {
+                svg = d3.select("body")
+                        .append("svg")
+
+                rect = svg.append("rect")
+                          .attr("x", "0")
+                          .attr("y", "0")
+                          .attr("width", "300")
+                          .attr("height", "400")
+                          .attr("style", "stroke:black; stroke-width:1; fill:lightblue; opacity:0.5; stroke-opacity:1;");
+
+            }
+        </script>
+    </body>
+</html>

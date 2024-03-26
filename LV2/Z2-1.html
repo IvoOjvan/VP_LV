@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z2-1</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* Add some basic styling */
+    .bar {
+      fill: steelblue;
+    }
+
+    .bar:hover {
+      fill: orange;
+    }
+
+    .axis {
+      font-size: 12px;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+  </style>
+</head>
+<body>
+  <svg width="500" height="300"></svg>
+
+  <script>
+
+    data_JSON = [
+                { "Zupanija": "Licko-senjska", "Korisnici": 16994},
+                { "Zupanija": "Požeško-slavonska", "Korisnici": 23398},
+                { "Zupanija": "Virovitičko-podravska", "Korisnici": 25378},
+                { "Zupanija": "Bjelovarsko-bilogorska", "Korisnici": 38580},
+                { "Zupanija": "Šibensko-kninska", "Korisnici": 38584},
+                { "Zupanija": "Koprivničko-križevačka", "Korisnici": 41579},
+                { "Zupanija": "Karlovačka", "Korisnici": 44783},
+                { "Zupanija": "Međimurska", "Korisnici": 47330},
+                { "Zupanija": "Brodsko-posavska", "Korisnici": 50266},
+                { "Zupanija": "Dubrovačko-neretvanska","Korisnici": 52205},
+                { "Zupanija": "Krapinsko-zagorska","Korisnici": 54901},
+                { "Zupanija": "Vukovarsko-srijemska",  "Korisnici": 55413},
+                { "Zupanija": "Sisačko-moslavačka","Korisnici": 58133},
+                { "Zupanija": "Zadarska",  "Korisnici": 70109},
+                { "Zupanija": "Varaždinska", "Korisnici": 75745},
+                { "Zupanija": "Istarska",  "Korisnici": 104763},
+                { "Zupanija": "Osječko-baranjska", "Korisnici": 109555},
+                { "Zupanija": "Zagrebačka","Korisnici": 136289},
+                { "Zupanija": "Primorsko-goranska","Korisnici": 148117},
+                { "Zupanija": "Splitsko-dalmatinska",  "Korisnici": 194254},
+                { "Zupanija": "Grad Zagreb", "Korisnici": 484208}
+            ];
+
+    data = JSON.parse(JSON.stringify(data_JSON));
+    console.log(data)
+  
+  </script>
+</body>
+</html>

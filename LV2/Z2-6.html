@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z2-6</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <script>
+            
+        // Sample data with dates
+        const data = [
+            { date: "2024-03-01", value: 10 },
+            { date: "2024-03-02", value: 20 },
+            { date: "2024-03-03", value: 15 },
+            { date: "2024-03-04", value: 25 },
+            { date: "2024-03-05", value: 30 }
+        ];
+
+        // Parse dates
+        const parseDate = d3.timeParse("%Y-%m-%d");
+        data.forEach(d => {
+            d.date = parseDate(d.date);
+        });
+
+        // Set up SVG and dimensions
+        const svgWidth = 500;
+        const svgHeight = 300;
+        const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+        const width = svgWidth - margin.left - margin.right;
+        const height = svgHeight - margin.top - margin.bottom;
+
+        // Create SVG element
+        const svg = d3.select("body").append("svg")
+            .attr("width", svgWidth)
+            .attr("height", svgHeight);
+
+        // Create scales
+        const xScale = d3.scaleTime()
+            .domain(d3.extent(data, d => d.date))
+            .range([margin.left, width]);
+
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)])
+            .range([height, margin.top]);
+
+        // Create line function
+        const line = d3.line()
+            .x(d => xScale(d.date))
+            .y(d => yScale(d.value))
+           .curve(d3.curveLinear) // linear interpolation
+
+        // Append path
+        svg.append("path")
+            .datum(data)
+            .attr("class", "line")
+            .attr("d", line)
+
+        // Create axes
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
+
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(yAxis);
+
+        svg.selectAll("path").attr("fill", "none");
+        svg.selectAll("path").attr("stroke", "green");
+
+        </script>
+    </body>
+</html>

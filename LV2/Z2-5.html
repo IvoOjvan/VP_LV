@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z2-5</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <script>
+            // Sample data
+            const data1 = [
+                { x: 0, y: 10 },
+                { x: 1, y: 15 },
+                { x: 2, y: 20 },
+                { x: 3, y: 25 },
+                { x: 4, y: 30 }
+            ];
+
+            const data2 = [
+                { x: 0, y: 25 },
+                { x: 1, y: 20 },
+                { x: 2, y: 15 },
+                { x: 3, y: 10 },
+                { x: 4, y: 5 }
+            ];
+
+            const data3 = [
+                { x: 0, y: 5 },
+                { x: 1, y: 5 },
+                { x: 2, y: 5 },
+                { x: 3, y: 5 },
+                { x: 4, y: 5 }
+            ];
+
+            // Set up SVG and dimensions
+            const svgWidth = 1000;
+            const svgHeight = 500;
+            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+            const width = svgWidth - margin.left - margin.right;
+            const height = svgHeight - margin.top - margin.bottom;
+
+            svg = d3.select("body")
+                        .append("svg")
+                            .attr("width", svgWidth)
+                            .attr("height", svgHeight);
+
+                
+            // Create scales
+            const xScale = d3.scaleLinear()
+                .domain([0, d3.max(data1.concat(data2, data3), d => d.x)])
+                .range([margin.left, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(data1.concat(data2, data3), d => d.y)])
+                .range([height, margin.top]);
+
+            // Create line functions
+        const line1 = d3.line()
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y))
+            .curve(d3.curveLinear); // linear interpolation
+
+        const line2 = d3.line()
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y))
+            .curve(d3.curveLinear); // linear interpolation
+
+        const line3 = d3.line()
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y))
+            .curve(d3.curveLinear); // linear interpolation
+
+        // Append paths
+        svg.append("path")
+            .datum(data1)
+            .attr("class", "line")
+            .attr("d", line1)
+            .style("stroke", "blue");
+
+        svg.append("path")
+            .datum(data2)
+            .attr("class", "line")
+            .attr("d", line2)
+            .style("stroke", "red")
+
+        svg.append("path")
+            .datum(data3)
+            .attr("class", "line")
+            .attr("d", line3)
+            .style("stroke", "green")
+
+        // Create axes
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
+
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("transform", `translate(${margin.left}, 0)`)
+            .call(yAxis);
+
+        </script>
+    </body>
+</html>

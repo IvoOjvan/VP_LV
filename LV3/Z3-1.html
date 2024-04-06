@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <title>Z3-1</title>
+    <meta charset="utf-8" />
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <script>
+        
+    var width = 1024;
+    var height = 768;
+
+        svg = d3.select("body")
+            .append("svg")
+            .attr("width",width)
+            .attr("height",height)
+            .attr("x", 100)
+            .attr("y", 100);
+
+        square = svg.append("rect")
+            .attr("x", 150)
+            .attr("y", 150)
+            .attr("height",100)
+            .attr("width", 100)
+            .attr("fill", "none")
+            .attr("stroke","red")
+            .attr("opacity", 1);
+
+        fillTransition = square.transition()
+            .delay(3000)
+            .duration(5000)
+            .attr("fill","red");
+
+        fillTransition.each("end", function() {
+            // Transition to reduce the size and opacity of the square
+            square.transition()
+                .duration(5000)
+                .attr("width", width / 2)
+                .attr("height", width / 2)
+                .attr("opacity", 0);
+        });
+    </script>
+</body>
+</html>

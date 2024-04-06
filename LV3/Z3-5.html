@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z3-5</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    circle {
+      stroke: #000;
+      stroke-width: 1;
+    }
+  </style>
+</head>
+<body>
+  <svg width="1500" height="1000"></svg>
+
+  <script>
+    const svg = d3.select("svg");
+    const sunRadius = 30;
+    const planetData = [
+      { name: "Mercury", radius: 5, distance: 100, speed: 0.01, angle: 20, color:"orange" },
+      { name: "Venus", radius: 10, distance: 140, speed: 0.008, angle: 45, color:"gray" },
+      { name: "Earth", radius: 12, distance: 180, speed: 0.007, angle: 90, color:"green" },
+      { name: "Mars", radius: 8, distance: 220, speed: 0.005, angle: 135, color:"red" },
+      { name: "Jupiter", radius: 20, distance: 280, speed: 0.003, angle: 180, color:"brown"  },
+      { name: "Saturn", radius: 18, distance: 340, speed: 0.002, angle: 225, color:"yellow" },
+      { name: "Uranus", radius: 15, distance: 400, speed: 0.001, angle: 270, color:"lightblue" },
+      { name: "Neptune", radius: 14, distance: 460, speed: 0.0008, angle: 315, color:"blue" }
+    ];
+
+    // Crta Sunce
+    svg.append("circle")
+      .attr("cx", 750)
+      .attr("cy", 500)
+      .attr("r", sunRadius)
+      .attr("fill", "yellow");
+
+    // Crta planete
+    const planets = svg.selectAll("circle.planet")
+      .data(planetData)
+      .enter().append("circle")
+      .attr("class", "planet")
+      .attr("fill", d => d.color)
+      .attr("r", d => d.radius)
+      .attr("cx", d => 750 + d.distance * Math.cos((d.angle  * Math.PI / 180)))
+      .attr("cy", d => 500 + d.distance * Math.sin((d.angle  * Math.PI / 180)));
+    
+    const paths = svg.selectAll("circle.path")
+        .data(planetData)
+        .enter().append("circle")
+        .attr("class", "path")
+        .attr("fill", "none")
+        .attr("stroke", d => d.color)
+        .attr("r", d => d.distance)
+        .attr("cx", d => 750)
+        .attr("cy", d => 500);
+
+    function rotatePlanets() {
+        planets.each(function(d) {
+            const angle = d3.select(this).attr("data-angle") ? parseFloat(d3.select(this).attr("data-angle")) : 0;
+            const newAngle = angle + d.speed*50;
+            d3.select(this).attr("data-angle", newAngle); 
+            const newX = 750 + d.distance * Math.cos(newAngle * Math.PI / 180);
+            const newY = 500 + d.distance * Math.sin(newAngle * Math.PI / 180);
+            d3.select(this).attr("cx", newX).attr("cy", newY);
+        });
+    }
+
+    // Pokretanje animacije
+    d3.interval(rotatePlanets, 20);
+  </script>
+</body>
+</html>

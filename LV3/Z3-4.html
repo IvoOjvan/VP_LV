@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D3.js Animacija Sudara</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <svg width="400" height="400">
+    <!-- Tri kružnice pri vrhu slike -->
+    <circle id="circle1" cx="100" cy="50" r="20" fill="red"></circle>
+    <circle id="circle2" cx="200" cy="50" r="20" fill="green"></circle>
+    <circle id="circle3" cx="300" cy="50" r="20" fill="blue"></circle>
+    
+    <!-- Tri pravokutnika pri dnu slike -->
+    <rect id="solid" x="50" y="300" width="50" height="50" fill="brown"></rect>
+    <rect id="elastic" x="150" y="300" width="50" height="50" fill="orange"></rect>
+    <rect id="liquid" x="250" y="300" width="50" height="50" fill="cyan"></rect>
+  </svg>
+
+  <script>
+    const svg = d3.select("svg");
+
+    // Postavke za simulaciju
+    const g = 9.81; // ubrzanje slobodnog pada
+    const duration = 1000; // trajanje animacije
+
+    // Podaci o kuglicama (kružnicama)
+    const balls = [
+      { id: "circle1", cx: 100, cy: 50, r: 20, fill: "red" },
+      { id: "circle2", cx: 200, cy: 50, r: 20, fill: "green" },
+      { id: "circle3", cx: 300, cy: 50, r: 20, fill: "blue" }
+    ];
+
+    // Podaci o pravokutnicima (materijalima)
+    const materials = [
+      { id: "solid", color: "brown", y: 300, mass: 1, elasticity: 1 },
+      { id: "elastic", color: "orange", y: 300, mass: 1, elasticity: 2 },
+      { id: "liquid", color: "cyan", y: 300, mass: 1, elasticity: -1 }
+    ];
+
+    // Funkcija za simulaciju slobodnog pada kuglica
+    function simulateFreeFall(){
+      balls.forEach(ball => {
+        svg.append("circle")
+          .attr("id", ball.id)
+          .attr("cx", ball.cx)
+          .attr("cy", ball.cy)
+          .attr("r", ball.r)
+          .attr("fill", ball.fill)
+          .transition()
+          .duration(duration)
+          .attr("cy", 300 - ball.r) // Pad do dna
+          .on("end", function() {
+            // Provjera sudara s pravokutnicima
+            checkCollision(this, ball);
+          });
+      });
+    }
+
+    // Funkcija za provjeru sudara
+    function checkCollision(ballElement, ballData) {
+      materials.forEach(material => {
+        const rectElement = document.getElementById(material.id);
+        const rect = rectElement.getBoundingClientRect();
+        const ball = ballElement.getBoundingClientRect();
+
+        if (
+          ball.right >= rect.left && ball.left <= rect.right &&
+          ball.bottom >= rect.top && ball.top <= rect.bottom
+        ) {
+          // Sudar
+          const materialElasticity = material.elasticity;
+          const velocityY = Math.sqrt(2 * g * (300 - ballData.r - rect.top)) * materialElasticity;
+          
+          // Simulacija refleksije (pretpostavljamo da se kuglica odbija vertikalno prema gore)
+          d3.select(ballElement)
+            .transition()
+            .duration(duration)
+            .attr("cy", rect.top - parseInt(ball.height*materialElasticity))
+            .on("end", function() {
+              // Simulacija novog slobodnog pada nakon sudara
+              d3.select(this)
+                .transition()
+                .duration(duration)
+                .attr("cy", 300 - ballData.r);
+            });
+        }
+      });
+    }
+
+
+    // Pokretanje simulacije
+    simulateFreeFall();
+  </script>
+</body>
+</html>

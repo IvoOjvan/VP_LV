@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+    <title>Z3-2</title>
+    <meta charset="utf-8" />
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <script>
+        var width = 1500;
+        var height = 1000;
+
+        var data = [
+            {"x":100,"y":100,"width":50,"height":50},
+            {"x":200,"y":100,"width":50,"height":50},
+            {"x":300,"y":100,"width":50,"height":50},
+            {"x":400,"y":100,"width":50,"height":50},
+            {"x":500,"y":100,"width":50,"height":50},
+            {"x":600,"y":100,"width":50,"height":50},
+            {"x":700,"y":100,"width":50,"height":50},
+            {"x":800,"y":100,"width":50,"height":50},
+            {"x":900,"y":100,"width":50,"height":50},
+            {"x":1000,"y":100,"width":50,"height":50}
+        ];
+
+        transitions=[];
+        for(i=0; i < 10; i++)
+            transitions[i] = Math.floor(Math.random() * 5000) + 2000;
+
+        svg = d3.select("body")
+            .append("svg")
+            .attr("width",width)
+            .attr("height",height)
+            .attr("x", 100)
+            .attr("y", 100);
+        
+        var rects = svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+                .attr("x", function(d){return d.x;})
+                .attr("y", function(d){return d.y;})
+                .attr("width", function(d){return d.width;})
+                .attr("height", function(d){return d.height;})
+                .attr("fill", "red")
+                .attr("stroke", "red")
+                .attr("opacity", 1)
+        
+        firstAnimation = d3.selectAll("rect")
+            .data(transitions)
+            .transition()
+                    .duration(function(t) { return t; })
+                    .attr("width", width / 3)
+                    .attr("height", width / 3)
+                    .attr("opacity", 0)
+                    .each("end")
+        
+        for(i=0; i < 10; i++){
+            transitions[i] = Math.floor(Math.random() * 5000) + 2000;
+            data[i].x = Math.floor(Math.random() * 1000) + 100;
+            data[i].y = Math.floor(Math.random() * 600) + 200;
+            page = Math.floor(Math.random() * 75) + 30;
+            data[i].width = page;
+            data[i].height = page;
+        }
+
+        firstAnimation.on("end", function() {
+            // Transition to reduce the size and opacity of the square
+            svg.selectAll("rect").remove();
+            rects = svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+                .attr("x", function(d){return d.x;})
+                .attr("y", function(d){return d.y;})
+                .attr("width", function(d){return d.width;})
+                .attr("height", function(d){return d.height;})
+                .attr("fill", "blue")
+                .attr("stroke", "blue")
+                .attr("opacity", 1)
+
+
+        secondAnimation = rects
+            .data(transitions)
+            .transition()
+                    .duration(function(t) { return t; })
+                    .attr("width", width / 3)
+                    .attr("height", width / 3)
+                    .attr("opacity", 0);
+        });
+       
+        
+              
+        
+        
+
+                    
+    
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Z4-4</title>
+        <title>test</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="http://code.jquery.com/jquery.min.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -95,42 +95,21 @@
                 .attr("dy", 3)
                 .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
                 .text(function(d) { return d.name; });
-/*
-            function click(d){
-                d.children.forEach(element => {
-                    d3.select("#"+element.name)
-                    .attr("opacity", function(){
-                        opacity = d3.select(this).attr("opacity");
-                        if(opacity == 1)
-                            return 0;
-                        else{
-                            return 1;
-                        }
-                        })
-                    d3.select("#"+element.name+"link")
-                        .attr("opacity", function(){
-                            opacity = d3.select(this).attr("opacity");
-                            if(opacity == 1)
-                                return 0;
-                            else{
-                                return 1;
-                            }
-                        })
-                });
-
-            }    */
 
             function click(d){
-            if(d.children) {
-                d.children.forEach(child => {
-                    var childNode = d3.select("#"+child.name);
-                    var childLink = d3.select("#"+child.name+"link");
-                    var opacity = childNode.attr("opacity") == 1 ? 0 : 1;
-                    childNode.attr("opacity", opacity);
-                    childLink.attr("opacity", opacity);
-                });
+                if(d.children) {
+                    d.children.forEach(child => {
+                        var childNode = d3.select("#"+child.name);
+                        var childLink = d3.select("#"+child.name+"link");
+                        var opacity = childNode.attr("opacity") == 1 ? 0 : 1;
+                        childNode.attr("opacity", opacity);
+                        childLink.attr("opacity", opacity);
+
+                        if(child.children)
+                            click(child);
+                    });   
+                }
             }
-        }
         </script>
     </body>
 </html>

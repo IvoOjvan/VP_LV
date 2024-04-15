@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z4-2</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+    </head>
+    <body>
+        <script>
+            var data = [
+                {name: 'jabuka', value: 20}, 
+                {name: 'kruska', value: 20},
+                {name: 'banana', value: 20}, 
+                {name: 'jagoda', value: 20}, 
+                {name: 'ribizla', value: 20}
+            ];
+
+            var width = 1000;
+            var height = 500;
+            var outerRadius = 200;
+            var innerRadius = 0;
+
+            var color = d3.scale.category20();
+
+            var pie = d3.layout.pie()
+                .value(function(d) { return d.value; });
+            
+            pie(data);
+
+            var arc = d3.svg.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius);
+
+            var svg = d3.select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            var pieArcs = svg.selectAll("g.pie")
+                .data(pie(data))
+                .enter()
+                .append("g")
+                .attr("class", "pie")
+                .attr("transform", "translate(" + (width / 2) + ", " + (height / 2) +")");
+
+            pieArcs.append("path")
+                .attr("fill", function(d, i) { return color(i); })
+                .attr("d", arc);
+
+            pieArcs.append("text")
+                .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; }) 
+                .attr("text-anchor", "middle")
+                .text(function(d) { return d.value; });
+
+           // Add category values inside each segment
+        pieArcs.append("text")
+            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; }) 
+            .attr("text-anchor", "middle")
+            .text(function(d) { return d.value; });
+
+        // Add category names outside the circular display
+        pieArcs.append("text")
+            .attr("transform", function(d) {
+                var pos = arc.centroid(d);
+                var midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                pos[0] = outerRadius * 1.05 * (midAngle < Math.PI ? 1 : -1);
+                pos[1] -= 5; // Adjust vertical positioning
+                return "translate(" + pos + ")";
+            })
+            .attr("dy", "0.35em")
+            .attr("text-anchor", function(d) {
+                return (d.startAngle + (d.endAngle - d.startAngle) / 2) < Math.PI ? "start" : "end";
+            })
+            .text(function(d) { return d.data.name; });
+        </script>
+    </body>
+</html>

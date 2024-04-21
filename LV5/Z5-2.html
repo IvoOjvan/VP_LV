@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z5-2</title>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+
+    <style>
+        .county-name {
+            position: absolute;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid black;
+            pointer-events: none;
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="county-name"></div>
+
+    <script>
+        var width = 960;
+        var height = 700;
+
+        var projection = d3.geo.mercator()
+            .center([0, 10])
+            .scale(6000)
+            .translate([17600, 4500])
+            .rotate([-180, 0]);
+
+        var path = d3.geo.path()
+            .projection(projection);
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Add a <g> element to group map paths
+        var g = svg.append("g");
+
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "county-name")
+            .style("opacity", 0);
+
+        d3.json("cro_regv3.json", function (error, cro) {
+            var data = topojson.feature(cro, cro.objects.layer1);
+
+            var states = g.selectAll("path.county")
+                .data(data.features)
+                .enter()
+                .append("path")
+                .attr("class", "county")
+                .attr("id", function (d) { return d.id; })
+                .attr("d", path)
+                .style("fill", "lightgreen")
+                .style("stroke", "gray")
+                .style("stroke-width", 1)
+                .style("stroke-opacity", 1)
+                .on("mouseover", function (d) {
+                    var countyName = d.properties.name;
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(countyName)
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");
+                })
+                .on("mouseout", function (d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+
+            // Add zoom behavior
+            svg.call(d3.behavior.zoom()
+                .on("zoom", function () {
+                    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                }));
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Z5-3</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://unpkg.com/topojson-client@3"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+    </head>
+    <body>
+        <div id="regions"></div> <!-- Add a div to display region names -->
+        <svg id="map"></svg> <!-- Give the SVG element an ID -->
+        <script>
+            var width = 960;
+            var height = 700;
+
+            var projection = d3.geoMercator()
+                .center([0, 10])
+                .scale(6000)
+                .translate([17600, 4500])
+                .rotate([-180, 0]);
+
+            var path = d3.geoPath()
+                .projection(projection);
+
+            var svg = d3.select("#map") // Select the SVG element by ID
+                .attr("width", width)
+                .attr("height", height)
+                .style("background", "lightblue");
+
+            var color = d3.scaleLinear()
+                .range(["#f7fbff", "#08306b"])
+
+            d3.json("cro.json").then(function(cro){
+                var data = topojson.feature(cro, cro.objects.layer1);
+
+                console.log(data.features)
+
+                var maxPopulation = d3.max(data.features, function(d) { return d.properties.population; });
+                color.domain([0, maxPopulation]);
+
+                var states = svg.selectAll(path.region)
+                    .data(data.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", "county")
+                    .attr("id", function(d){ return d.id; })
+                    .attr("d", path)
+                    .style("fill", function(d){
+                        return color(d.properties.population);
+                    })
+                    .style("stroke-width", 5)
+                    .style("stroke-opacity", 1)
+                    .on("mouseover", function(d){
+                        console.log(d.properties);
+                    })
+                    
+            })
+            
+        </script>
+    </body>
+</html>

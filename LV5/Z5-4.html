@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Z5-4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+</head>
+<body>
+
+<div id="regions"></div> <!-- Add a div to display region names -->
+<svg id="map"></svg> <!-- Give the SVG element an ID -->
+
+<script>
+
+    var width = 960;
+    var height = 700;
+
+    var projection = d3.geoMercator()
+        .center([0, 10])
+        .scale(6000)
+        .translate([17600, 4500])
+        .rotate([-180, 0]);
+
+    var path = d3.geoPath()
+        .projection(projection);
+
+    var svg = d3.select("#map") // Select the SVG element by ID
+        .attr("width", width)
+        .attr("height", height)
+        .style("background", "lightblue");
+
+    var color = d3.scaleLinear()
+        .range(["#f7fbff", "#08306b"])
+
+    var zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+
+    function zoomed(event) {
+        const {transform} = event;
+        svg.selectAll("path").attr("transform", transform);
+        svg.selectAll("path").attr("stroke-width", 1 / transform.k);
+    }
+
+    d3.json("cro.json").then(function(cro){
+        var data = topojson.feature(cro, cro.objects.layer1);
+        console.log(data.features)
+
+        var maxPopulation = d3.max(data.features, function(d) { return d.properties.population; });
+        color.domain([0, maxPopulation]);
+
+        var states = svg.selectAll(path.region)
+            .data(data.features)
+            .enter()
+            .append("path")
+            .attr("class", "county")
+            .attr("id", function(d){ return d.id; })
+            .attr("d", path)
+            .style("fill", function(d){
+                return color(d.properties.population);
+            })
+            .style("stroke-width", 1)
+            .style("stroke-opacity", 1)
+            .style("stroke", "black")
+            .on("click", clicked);
+
+        svg.call(zoom);
+
+        function reset() {
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity,
+                d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+            );
+        }
+
+        function clicked(event, d) {
+            const [[x0, y0], [x1, y1]] = path.bounds(d);
+            event.stopPropagation();
+            //d3.select(this).transition().style("fill", "red");
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity
+                    .translate(width / 2, height / 2)
+                    .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+                    .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+                d3.pointer(event, svg.node())
+            );
+
+            var features = d3.select(this).datum();
+            console.log(features)
+
+            setTimeout(function() {
+                svg.transition()
+                    .duration(1000)
+                    .call(reset);
+
+                document.getElementById("regions").innerHTML = ""; // Remove region name after zooming out
+            }, 10000);
+
+            document.getElementById("regions").innerHTML = "Županija: " + features.properties.name + "<br>Populacija: " + features.properties.population;
+        }
+    });
+
+</script>
+</body>
+</html>
